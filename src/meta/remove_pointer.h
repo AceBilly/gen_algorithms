@@ -5,7 +5,9 @@
 namespace algor_yht {
 namespace meta {
 template <typename T>
-struct remove_pointer;
+struct remove_pointer {
+  using type = T;
+};
 template <typename T>
 struct remove_pointer<T*> {
   using type = T;

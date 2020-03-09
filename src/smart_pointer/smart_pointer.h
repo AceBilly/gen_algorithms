@@ -8,10 +8,18 @@ class SmartPointer {
  public:
   SmartPointer() = default;
   // 构造函数 输入一个指向相应数据的有效指针
-  explicit SmartPointer(T* p_src) : m_ptr(m_ptr), count(new type::uint_t(0)) {
-    if (p_src == nullptr) {
+  explicit SmartPointer(T*(&p_src)) : m_ptr(p_src), count(new type::uint_t(0)) {
+    if (m_ptr == nullptr) {
       *this->count = 0;
     } else {
+      *this->count = 1;
+    }
+  }
+  //  将一个指针托管给SmartPointer
+  void operator=(T* ptr) {
+    if (this->count == nullptr) {
+      this->count = new int(1);
+    } else if (*this->count == 0) {
       *this->count = 1;
     }
   }
@@ -66,16 +74,17 @@ class SmartPointer {
     }
     throw "access nullptr";
   }
-  ~SmartPointer() {
+  virtual ~SmartPointer() {
     if (this->count != nullptr && this->m_ptr != nullptr) {
       reset();
     }
   }
 
- private:
+ protected:
   T* m_ptr = nullptr;
   algor_yht::type::uint_t* count = nullptr;
   // 重置当前对象
+ private:
   inline void reset() {
     --*count;
     if (this->count == 0) {
